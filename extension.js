@@ -1,6 +1,3 @@
-
-
-
 const St = imports.gi.St;
 const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
@@ -14,12 +11,8 @@ const Clutter = imports.gi.Clutter;
 const Util = imports.misc.util;
 const GLib = imports.gi.GLib;
 
-const Gettext = imports.gettext.domain("gnome-shell-trash-extension");
-const _ = Gettext.gettext;
-
 const GnomeSession = imports.misc.gnomeSession;
 const LOGOUT_MODE_NORMAL = 0;
-
 
 var tarjeta, contenido, salida;
 
@@ -59,8 +52,8 @@ const PrimeMenu = new Lang.Class({
                                        style_class: 'popup-menu-icon' })
         this.actor.add_actor(this.nvidiaIcon);
         this.xorg_file = Gio.file_new_for_path('/etc/X11/');
-        this._addConstMenuItems();
-        this._onXorgChange();
+        this._addMenuItems();
+        this._whatCard();
         this._setupWatch();
 
     },
@@ -79,35 +72,18 @@ const PrimeMenu = new Lang.Class({
 		}
     },
     
-    _addConstMenuItems: function() {
+    _addMenuItems: function() {
     	this._whatCard();
         this.control = new PopupMenu.PopupSwitchMenuItem(_("Nvidia"), this.activo);
- /*       if(this.tarjeta="intel"){
-        	//this.control.toggle();
-        	control.setToggleState(this.activo);
-        }else {
-        	control.setToggleState(this.activo);
-        }*/
         this.menu.addMenuItem(this.control, 1);
         this.control.connect('toggled', Lang.bind(this, function() {
-/*        	if (this.tarjeta == "intel"){
-        		//let [res, out, err, statatus] = GLib.spawn_command_line_sync("pkexec bash '/usr/sbin/fedora-prime-select intel'");
-        		Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'intel']);
-        	}else if (this.tarjeta == "nvidia"){
-        		Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'nvidia']);
-        	}*/
         	this.err = null;
           	if (this.tarjeta == "intel"){
 
           		this.err = Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'intel']);
-          		//this.salida = GLib.g_spawn_command_line_async("pkexec '/usr/bin/bash /usr/sbin/fedora-prime-select intel'");
         	}else if (this.tarjeta == "nvidia"){
-        		//this.salida = GLib.g_spawn_command_line_async('pkexec /usr/bin/bash /usr/sbin/fedora-prime-select nvidia');
         		this.err = Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'nvidia']);
         	}
-        
-        	
-            //_onEmptyTrash();
          }));
     },
     
@@ -119,73 +95,16 @@ const PrimeMenu = new Lang.Class({
         this.monitor = this.xorg_file.monitor_directory(0, null, null);
         this.monitor.connect('changed', Lang.bind(this, this._onXorgChange));
     },
-
-	
-    _onEmptyTrash: function() {
-        new ConfirmEmptyTrashDialog(Lang.bind(this, this._doEmptyTrash)).open();
-      },
       
     _onXorgChange: function() {
       	this._whatCard();
       	var sessionManager = new GnomeSession.SessionManager();
       	sessionManager.LogoutRemote(LOGOUT_MODE_NORMAL);
-
     }
 
 });
 
-const MESSAGE = _("Are you sure you want to delete all items from the trash?\n\
-This operation cannot be undone.");
-
-function ConfirmEmptyTrashDialog(emptyMethod) {
-  this._init(emptyMethod);
-}
-
-ConfirmEmptyTrashDialog.prototype = {
-  __proto__: ModalDialog.ModalDialog.prototype,
-
-  _init: function(emptyMethod) {
-    ModalDialog.ModalDialog.prototype._init.call(this, { styleClass: null });
-
-    let mainContentBox = new St.BoxLayout({ style_class: 'polkit-dialog-main-layout',
-                                            vertical: false });
-    this.contentLayout.add(mainContentBox, { x_fill: true, y_fill: true });
-
-    let messageBox = new St.BoxLayout({ style_class: 'polkit-dialog-message-layout',
-                                        vertical: true });
-    mainContentBox.add(messageBox, { y_align: St.Align.START });
-
-    this._subjectLabel = new St.Label({ style_class: 'polkit-dialog-headline',
-                                        text: _("Empty Trash?") });
-
-    messageBox.add(this._subjectLabel, { y_fill:  false, y_align: St.Align.START });
-
-    this._descriptionLabel = new St.Label({ style_class: 'polkit-dialog-description',
-                                            text: Gettext.gettext(MESSAGE) });
-
-    messageBox.add(this._descriptionLabel, { y_fill:  true, y_align: St.Align.START });
-
-    this.setButtons([
-      {
-        label: _("Cancel"),
-        action: Lang.bind(this, function() {
-          this.close();
-        }),
-        key: Clutter.Escape
-      },
-      {
-        label: _("Empty"),
-        action: Lang.bind(this, function() {
-          this.close();
-          emptyMethod();
-        })
-      }
-    ]);
-  }
-};
-
 function init(extensionMeta) {
-    imports.gettext.bindtextdomain("gnome-shell-trash-extension", extensionMeta.path + "/locale");
     let theme = imports.gi.Gtk.IconTheme.get_default();
     theme.append_search_path(extensionMeta.path + "/icons");
 }
@@ -200,12 +119,3 @@ function enable() {
 function disable() {
   _indicator.destroy();
 }
-
-
-
-/*        this.open_item = new PrimeMenuItem(_(this.contenido),
-"folder-open-symbolic",
-null,
-Lang.bind(this, this._onSwitchGpu));
-this.menu.addMenuItem(this.open_item);*/
-//let  control = new PopupMenu.PopupSwitchMenuItem(_(this.conmutador), "folder-open-symbolic");

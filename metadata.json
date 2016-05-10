@@ -1,18 +1,12 @@
 {
     "shell-version": [
-        "3.18",
-        "3.16",
-        "3.14",
-        "3.12",
-        "3.10",
-        "3.8",
-        "3.6"
+        "3.18"
     ],
-    "version": "0.4",
-    "uuid": "gnome-shell-trash-extension",
-    "name": "Trash",
-    "description": "A Trash button for the GNOME shell panel",
-    "url": "https://github.com/bertoldia/gnome-shell-trash-extension",
+    "version": "0.1",
+    "uuid": "gnome-shell-prime-extension",
+    "name": "Prime",
+    "description": "Extension for turning on and off nvidia gpu",
+    "url": "https://github.com/euoar/FedoraPrimeExtension",
     "localedir": "locale",
-    "original-authors": "Axel von Bertoldi"
+    "original-authors": "Euoar"
 }
