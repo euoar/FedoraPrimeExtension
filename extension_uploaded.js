@@ -23,7 +23,6 @@ const PrimeMenuItem = new Lang.Class({
 
     _init: function(text, icon_name, gicon, callback) {
         this.parent(0.0, text);
-
         let icon_cfg = { style_class: 'popup-menu-icon' };
         if (icon_name != null) {
           icon_cfg.icon_name = icon_name;
@@ -36,12 +35,10 @@ const PrimeMenuItem = new Lang.Class({
         this.actor.add_child(this.label);
         this.connect('activate', callback);
     },
-
     destroy: function() {
         this.parent();
     }
 });
-
 
 const PrimeMenu = new Lang.Class({
     Name: 'PrimeMenu.PrimeMenu',
@@ -58,7 +55,6 @@ const PrimeMenu = new Lang.Class({
         this._setupWatch();
 		//cur_vendor = this.ruta + "/util" + "/cur_vendor";
 		//print_vendor = this.ruta + "/util" + "/print_vendor.sh";
-
     },
     
     _whatCard: function() {
@@ -73,13 +69,6 @@ const PrimeMenu = new Lang.Class({
 		    this.conmutador = "Nvidia";
 		    this.activo = false;
 		}
-//          		this.err = Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'intel']);
-		//Util.spawn(['glxinfo | ','grep', ' "OpenGL vendor string" > ', ' /home/eu/salida.txt']);
-/*		this.cur_vendor = extensionMeta.path + "/util" + "/cur_vendor";
-		this.print_vendor = extensionMeta.path + "/util" + "/print_vendor.sh";
-		Util.spawn(['bash', this.print_vendor];*/
-		//Util.spawn(['bash', print_vendor];
-
     },
     
     _addMenuItems: function() {
@@ -89,7 +78,6 @@ const PrimeMenu = new Lang.Class({
         this.control.connect('toggled', Lang.bind(this, function() {
         	this.err = null;
           	if (this.tarjeta == "intel"){
-
           		this.err = Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'intel']);
         	}else if (this.tarjeta == "nvidia"){
         		this.err = Util.spawn(['pkexec', 'bash', '/usr/sbin/fedora-prime-select', 'nvidia']);
@@ -110,14 +98,20 @@ const PrimeMenu = new Lang.Class({
       	this._whatCard();
       	var sessionManager = new GnomeSession.SessionManager();
       	sessionManager.LogoutRemote(LOGOUT_MODE_NORMAL);
-/*		var cmd = "glxinfo | grep 'OpenGL vendor string' > /home/eu/salida.txt";
-			try {
-				GLib.spawn_command_line_async( cmd, e );
-			} catch ( e ) {
-				throw e;
-			}*/
+/*	    try {
+	    	// TODO: hay que cambiar esto por una ruta dinámica con extensionMeta.path
+	    	Util.spawn(['bash', '/home/eu/.local/share/gnome-shell/extensions/gnome-shell-trash-extension/util/print_vendor.sh']);
+	    }catch (err){
+	    	
+	    }*/
+/*	    
+	    //código en pruebas
+	    var input_file = Gio.file_new_for_path('/home/eu/.local/share/gnome-shell/extensions/gnome-shell-trash-extension/util/print_vendor.sh');
+	    var fstream = input_file.read();
+	    var dstream = new Gio.DataInputStream.c_new(fstream);
+	    var line = dstream.read_until("", 0);
+	    fstream.close();*/
     }
-
 });
 
 function init(extensionMeta) {
